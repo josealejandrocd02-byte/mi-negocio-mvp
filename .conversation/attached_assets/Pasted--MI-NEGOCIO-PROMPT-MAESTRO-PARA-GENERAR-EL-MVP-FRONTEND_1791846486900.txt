@@ -1,0 +1,379 @@
+# MI NEGOCIO — PROMPT MAESTRO PARA GENERAR EL MVP FRONTEND
+
+## 1. Objetivo
+
+Construye una aplicación web SaaS llamada **Mi Negocio**, dirigida a pequeños comercios, cafeterías, pizzerías y restaurantes.
+
+Debe permitir gestionar locales, empleados, categorías, productos, inventario y ventas mediante una interfaz moderna, sencilla y profesional.
+
+**Esta fase es exclusivamente frontend.** Toda la aplicación debe funcionar con datos ficticios locales, sin backend ni base de datos.
+
+Entrega una aplicación funcional y navegable, no solamente un diseño estático.
+
+## 2. Estructura y stack obligatorios
+
+La aplicación debe ser una **SPA estándar e independiente**, no un monorepo ni un workspace.
+
+### Tecnologías
+
+- Vite con React y TypeScript.
+- Tailwind CSS.
+- shadcn/ui.
+- React Router.
+- TanStack React Query.
+- React Hook Form y Zod.
+- Lucide React para iconos.
+- Recharts para gráficos, cuando sea útil.
+
+Utiliza versiones compatibles entre sí y evita dependencias innecesarias.
+
+### Estructura obligatoria
+
+La raíz del proyecto debe contener:
+
+- `index.html`
+- `package.json`
+- `vite.config.ts`
+- `tsconfig.json`
+- `tailwind.config.ts`
+- `postcss.config.js`
+- `components.json`
+- `public/`
+- `src/`
+
+Dentro de `src/`, organiza el código en:
+
+- `components/`
+- `components/ui/`
+- `pages/`
+- `hooks/`
+- `lib/`
+- `data/`
+- `services/mock/`
+- `types/`
+- `App.tsx`
+- `main.tsx`
+- `index.css`
+
+Puedes añadir archivos de configuración imprescindibles, pero conserva esta estructura simple.
+
+### Prohibiciones estructurales
+
+- No crear monorepos.
+- No utilizar pnpm workspaces.
+- No generar `pnpm-workspace.yaml`.
+- No crear aplicaciones dentro de `artifacts/`, `apps/` o `packages/`.
+- No colocar el código principal dentro de una subcarpeta.
+- No crear carpetas raíz innecesarias como `scripts/` o `lib/`.
+- No generar `.replit`, `replit.md` ni configuraciones específicas de Replit.
+- No crear un servidor Express ni una API.
+- No crear otra aplicación secundaria o un segundo frontend.
+
+**Importante:** `index.html`, `package.json` y `vite.config.ts` deben estar directamente en la raíz. El proyecto debe poder importarse desde GitHub y desplegarse en Vercel como una aplicación Vite independiente, sin configuración de servicios múltiples.
+
+## 3. Restricciones de esta fase
+
+No implementar ni configurar:
+
+- Backend.
+- PostgreSQL ni otra base de datos.
+- Supabase.
+- APIs externas.
+- Autenticación real.
+- Pagos o pasarelas.
+- Suscripciones.
+- Envíos de correo.
+- Servicios externos.
+
+Utiliza datos mock locales y servicios TypeScript asíncronos que simulen operaciones reales.
+
+Crear, editar, activar, suspender, cerrar y registrar ventas debe actualizar la interfaz. No uses credenciales reales ni simules que los datos se han guardado en un servidor.
+
+## 4. Identidad visual
+
+Diseña un producto SaaS premium, minimalista, moderno y profesional.
+
+### Paleta
+
+- Fondo: `#F7F8FC`
+- Tarjetas: `#FFFFFF`
+- Color primario: `#4F46E5`
+- Primario oscuro: `#3730A3`
+- Texto principal: `#111827`
+- Texto secundario: `#6B7280`
+- Bordes: `#E5E7EB`
+- Éxito: `#16A34A`
+- Advertencia: `#D97706`
+- Error: `#DC2626`
+
+Utiliza Inter o una tipografía equivalente.
+
+### Estilo
+
+- Sidebar elegante con iconos.
+- Barra superior con título y perfil.
+- Tarjetas de estadísticas.
+- Tablas limpias con búsqueda y filtros.
+- Formularios consistentes y validados.
+- Diálogos de confirmación.
+- Notificaciones toast.
+- Gráficos claros.
+- Diseño responsive para escritorio, tablet y móvil.
+- Estados de carga, vacío y error.
+
+Evita gradientes exagerados, sombras fuertes y elementos decorativos innecesarios.
+
+## 5. Modelo de roles
+
+### SUPER_ADMIN
+
+Propietario de la plataforma. Gestiona todos los locales y usuarios globales.
+
+### STORE_ADMIN
+
+Administrador de un local. Gestiona empleados, categorías, productos, inventario, ventas y configuración del local.
+
+### EMPLOYEE
+
+Empleado de un local. Puede consultar productos e inventario y registrar ventas, sin permisos de administración.
+
+Un mismo usuario puede tener roles distintos en diferentes locales.
+
+## 6. Modelo de datos conceptual
+
+Utiliza estos modelos para definir los tipos TypeScript y los datos ficticios.
+
+### Usuario
+
+- `id`
+- `full_name`
+- `email`
+- `platform_role`: `SUPER_ADMIN` o `USER`
+- `is_active`
+- `created_at`
+
+### Local
+
+- `id`
+- `name`
+- `address`
+- `phone`
+- `status`: `ACTIVE`, `SUSPENDED` o `CLOSED`
+- `created_at`
+
+### Miembro de local
+
+- `id`
+- `store_id`
+- `user_id`
+- `role`: `STORE_ADMIN` o `EMPLOYEE`
+- `is_active`
+- `created_at`
+
+### Categoría
+
+- `id`
+- `store_id`
+- `name`
+
+### Producto
+
+- `id`
+- `store_id`
+- `category_id`
+- `name`
+- `price`
+- `stock_quantity`
+- `is_active`
+- `created_at`
+
+### Venta
+
+- `id`
+- `store_id`
+- `sold_by`
+- `total`
+- `created_at`
+
+### Detalle de venta
+
+- `id`
+- `sale_id`
+- `store_id`
+- `product_id`
+- `quantity`
+- `unit_price`
+
+Los precios deben mostrarse en bolivianos (Bs). Cada categoría, producto y venta debe pertenecer a un local.
+
+## 7. Pantallas y rutas
+
+### Acceso de demostración
+
+`/login`
+
+Crear una pantalla de inicio de sesión visualmente profesional.
+
+- Campos de correo y contraseña.
+- Selector del rol de demostración.
+- Botón para entrar al modo demo.
+- Aviso discreto que indique que se usan datos ficticios.
+
+Cualquier correo y contraseña no vacíos pueden utilizarse en la demo. No conectar un proveedor de autenticación.
+
+### Superadministrador
+
+`/admin/dashboard`
+
+Mostrar:
+- Total de locales.
+- Locales activos y suspendidos.
+- Total de usuarios.
+- Ventas globales ficticias.
+- Gráfico de crecimiento.
+- Actividad reciente.
+- Accesos rápidos.
+
+`/admin/stores`
+
+Tabla de locales con búsqueda, filtros, estado, dirección, teléfono y administrador.
+
+Permitir crear, editar, consultar, suspender, reactivar y cerrar locales mediante operaciones simuladas.
+
+`/admin/stores/new`
+
+Formulario para crear un local y asignarle un administrador ficticio.
+
+`/admin/users`
+
+Listado global de usuarios con búsqueda, filtros, rol, estado y acciones de activación o desactivación.
+
+### Administrador de local
+
+`/app/dashboard`
+
+Mostrar ventas del día, número de ventas, productos registrados, alertas de stock, ventas de los últimos siete días, productos más vendidos y últimas ventas.
+
+`/app/employees`
+
+Listar, crear, editar, activar y desactivar empleados de demostración.
+
+`/app/categories`
+
+Crear, editar, buscar y eliminar categorías. No permitir eliminar una categoría con productos asociados sin resolver primero esa relación.
+
+`/app/products`
+
+Listar, buscar, filtrar, crear y editar productos. Mostrar categoría, precio, stock y estado. Permitir activar y desactivar productos.
+
+`/app/inventory`
+
+Mostrar productos, categoría, stock actual, precio, valor estimado del inventario y alertas de stock bajo o agotado. Permitir simular ajustes de stock.
+
+`/app/sales`
+
+Historial de ventas con identificador, fecha, empleado, artículos, total en Bs y acceso al detalle. Incluir búsqueda y filtros por fecha y empleado.
+
+`/app/sales/new`
+
+Punto de venta sencillo:
+
+- Buscar productos y filtrar por categoría.
+- Añadir productos al carrito.
+- Cambiar cantidades y eliminar artículos.
+- Mostrar precio unitario, subtotal y total.
+- Confirmar la venta.
+- Mostrar un comprobante visual ficticio.
+
+Al confirmar una venta, actualizar el historial, descontar el stock y actualizar los indicadores. No permitir ventas vacías ni cantidades superiores al stock disponible.
+
+`/app/settings`
+
+Formulario para consultar y editar nombre, dirección y teléfono del local.
+
+### Empleado
+
+Debe tener acceso únicamente a las vistas permitidas:
+
+- Dashboard del local.
+- Consulta de productos.
+- Inventario de solo lectura.
+- Registro de ventas.
+- Historial de ventas permitido.
+
+Oculta las opciones no autorizadas y controla la navegación directa dentro de la demo. Esto simula permisos en el frontend y no constituye seguridad real.
+
+## 8. Datos de demostración
+
+Crear datos suficientes para probar la aplicación:
+
+- 1 superadministrador.
+- 3 locales ficticios.
+- 2 o 3 administradores de local.
+- Varios empleados.
+- Al menos 6 categorías.
+- Al menos 15 productos.
+- Al menos 10 ventas con sus detalles.
+
+Ejemplos de locales:
+
+- Café Central.
+- Pizzería Napoli.
+- Minimarket San Martín.
+
+Utiliza precios en Bs, existencias y fechas razonables. Los indicadores, las ventas y los detalles deben ser coherentes entre sí.
+
+## 9. Componentes reutilizables
+
+Crear cuando resulte útil:
+
+- `AppSidebar`
+- `AppHeader`
+- `PageHeader`
+- `StatCard`
+- `DataTable`
+- `SearchInput`
+- `StatusBadge`
+- `ConfirmDialog`
+- `EmptyState`
+- `LoadingState`
+- `RoleDemoSwitcher`
+- `SalesChart`
+- `SaleSummary`
+
+Evita repetir código y no construyas abstracciones innecesarias.
+
+## 10. Persistencia de demostración
+
+Utiliza datos mock iniciales en TypeScript y servicios locales asíncronos.
+
+Puedes conservar los cambios de demostración en `localStorage` para que sobrevivan a las recargas del navegador. No guardes contraseñas ni información sensible.
+
+Incluye una opción para restablecer los datos demo a su estado inicial.
+
+## 11. Criterios de aceptación
+
+La aplicación estará terminada cuando:
+
+1. `npm install` instale las dependencias.
+2. `npm run dev` inicie Vite.
+3. `npm run build` complete sin errores.
+4. `index.html` y `vite.config.ts` estén en la raíz.
+5. Todas las rutas principales funcionen.
+6. Los tres roles de demostración funcionen.
+7. Formularios, búsquedas, filtros y acciones actualicen la interfaz.
+8. El punto de venta registre ventas ficticias y actualice el stock.
+9. Los dashboards muestren datos coherentes.
+10. El diseño sea responsive.
+11. No existan dependencias de backend ni servicios externos.
+12. No haya errores de TypeScript o compilación.
+
+## 12. Instrucción final
+
+Implementa la aplicación completa dentro de una única raíz Vite.
+
+Primero crea la estructura y el diseño; después termina los flujos funcionales. Reutiliza componentes, evita cambios redundantes y optimiza el consumo de tokens.
+
+No generes una landing page aislada ni un dashboard estático. Necesito un MVP navegable, funcional y listo para probar.
+
+**Antes de terminar, verifica la estructura de archivos y ejecuta la compilación de producción. Informa brevemente del resultado y de cualquier limitación pendiente.**
